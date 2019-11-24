@@ -104,5 +104,9 @@ print("QDA REDUCED confusion matrix is: ")
 print_matrix(confusion_matrix(y, qda_reduced.predict(pca.transform(X))))
 print()
 
-# print("Test Set Predictions:")
-# print(qda.predict(test_data))
+predictions = qda.predict(test_data)
+
+print("Test Set Predictions:")
+print(predictions)
+
+#pd.DataFrame(predictions).to_csv('predictions.csv');
