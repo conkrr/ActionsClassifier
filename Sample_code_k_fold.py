@@ -13,11 +13,14 @@ from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 from itertools import product
 
-df = pd.read_table("data_3_6.csv", sep=",", names=["x1", "x2", "y"])  # <-- FIX THIS to get the correct file and labels
+df = pd.read_table("ActionsData/trainData.csv", sep=",", header=0)
+df.drop(columns=df.columns[0], axis=1, inplace=True)
 
 
-X = df[["x1", "x2"]]
-y = df["y"]
+X = df
+y = pd.read_table("ActionsData/trainLabel.csv", sep=",", header=0)
+y.drop(columns=y.columns[0], axis=1, inplace=True)
+y = y["class_id"]
 
 scores_gnb = []
 scores_lda = []
@@ -52,17 +55,20 @@ def print_matrix(m):
 
 print()
 print("Score of GNB is: " + str(np.mean(scores_gnb)) + " with a std of: " + str(np.std(scores_gnb)))
+print("Scores: ", scores_gnb)
 print("Class Priors: ", gnb.class_prior_)
 print("GNB confusion matrix is: ")
 print_matrix(confusion_matrix(y, gnb.predict(X)))
 print()
 
 print("Score of LDA is: " + str(np.mean(scores_lda)) + " with a std of: " + str(np.std(scores_lda)))
+print("Scores: ", scores_lda)
 print("LDA confusion matrix is: ")
 print_matrix(confusion_matrix(y, lda.predict(X)))
 print()
 
 print("Score of QDA is: " + str(np.mean(scores_qda)) + " with a std of: " + str(np.std(scores_qda)))
+print("Scores: ", scores_qda)
 print("QDA confusion matrix is: ")
 print_matrix(confusion_matrix(y, qda.predict(X)))
 print()
