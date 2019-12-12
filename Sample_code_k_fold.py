@@ -13,6 +13,11 @@ from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 from itertools import product
 from sklearn.decomposition import PCA
+from sklearn.neural_network import MLPClassifier
+
+# parameters
+
+hl_size = 100
 
 df = pd.read_table("ActionsData/trainData.csv", sep=",", header=0)
 df.drop(columns=df.columns[0], axis=1, inplace=True)
@@ -45,10 +50,12 @@ scores_gnb = []
 scores_lda = []
 scores_qda = []
 scores_qda_red = []
+scores_nn = []
 gnb = GaussianNB()
 lda = LinearDiscriminantAnalysis()
 qda = QuadraticDiscriminantAnalysis()
 qda_reduced = QuadraticDiscriminantAnalysis()
+nn = MLPClassifier(hidden_layer_sizes=(hl_size, hl_size, hl_size), activation="logistic", verbose=False)
 cv = KFold(n_splits=5, random_state=42, shuffle=True)
 for train_index, test_index in cv.split(X):
     # print("Train Index: ", train_index, "\n")
@@ -71,6 +78,10 @@ for train_index, test_index in cv.split(X):
     #qda reduced
     qda_reduced.fit(pca.transform(X_train), y_train)
     scores_qda_red.append(qda_reduced.score(pca.transform(X_test), y_test))
+
+    #nn
+    nn.fit(X_train, y_train)
+    scores_nn.append(nn.score(X_test, y_test))
 
 
 def print_matrix(m):
@@ -102,6 +113,12 @@ print("Score of QDA REDUCED is: " + str(np.mean(scores_qda_red)) + " with a std 
 print("Scores: ", scores_qda_red)
 print("QDA REDUCED confusion matrix is: ")
 print_matrix(confusion_matrix(y, qda_reduced.predict(pca.transform(X))))
+print()
+
+print("Score of neural net is: " + str(np.mean(scores_nn)) + " with a std of: " + str(np.std(scores_nn)))
+print("Scores: ", scores_nn)
+print("NN confusion matrix is: ")
+print_matrix(confusion_matrix(y, nn.predict(X)))
 print()
 
 # print("Test Set Predictions:")
