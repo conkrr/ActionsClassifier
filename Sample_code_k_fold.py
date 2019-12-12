@@ -121,5 +121,9 @@ print("NN confusion matrix is: ")
 print_matrix(confusion_matrix(y, nn.predict(X)))
 print()
 
-# print("Test Set Predictions:")
-# print(qda.predict(test_data))
+predictions = qda.predict(test_data)
+
+print("Test Set Predictions:")
+print(predictions)
+
+#pd.DataFrame(predictions).to_csv('predictions.csv');
